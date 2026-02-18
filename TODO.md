@@ -3,11 +3,13 @@
 > NextJS + Convex + shadcn/ui dashboard for OpenClaw management
 
 ## Phase 1: Setup & Foundation
-- [ ] Initialize NextJS project with shadcn/ui
-- [ ] Setup Convex database
-- [ ] Configure TypeScript types for all data models
-- [ ] Setup project structure (components, pages, convex schema)
-- [ ] Create basic layout with navigation
+- [x] Initialize NextJS project with shadcn/ui
+- [x] Setup Convex database (schema + provider)
+- [x] Configure TypeScript types for all data models
+- [x] Setup project structure (components, pages, convex schema)
+- [x] Create basic layout with navigation
+- [x] Create all 6 tool page layouts (Tasks, Content, Calendar, Memory, Team, Office)
+- [x] Install shadcn UI components (button, card, input)
 
 ## Phase 2: Tasks Board
 - [ ] Design task schema (id, title, status, assignee: 'me'|'assistant', createdAt, updatedAt)
@@ -72,4 +74,4 @@
 - **Icons:** Lucide React
 - **File Storage:** Local filesystem (memories) + Convex (app data)
 
-## Current Phase: Phase 1 — Setup
+## Current Phase: Phase 2 — Tasks Board (in progress)
