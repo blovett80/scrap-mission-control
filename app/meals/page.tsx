@@ -13,27 +13,40 @@ import {
   Utensils, 
   ChefHat, 
   Trash2,
-  Check
+  Check,
+  Trash,
+  ArrowUpDown,
+  MessageSquare
 } from "lucide-react";
 
 const FAMILY = ["Roman", "Harlan", "Pam", "Brian"] as const;
 const CHEFS = ["Robert", "Brian", "Pam", "Other"] as const;
 
+const SORT_OPTIONS = [
+  { value: "date-desc", label: "Most Recent First" },
+  { value: "date-asc", label: "Oldest First" },
+  { value: "name-asc", label: "Meal Name (A-Z)" },
+  { value: "name-desc", label: "Meal Name (Z-A)" },
+] as const;
+
 export default function MealsPage() {
   const [newMeal, setNewMeal] = useState("");
   const [chef, setChef] = useState("Robert");
+  const [sortBy, setSortBy] = useState<typeof SORT_OPTIONS[number]["value"]>("date-desc");
   const [ratings, setRatings] = useState<Record<string, "up" | "down" | null>>({
     Roman: null,
     Harlan: null,
     Pam: null,
     Brian: null,
   });
+  const [comments, setComments] = useState("");
 
   const meals = useQuery(api.meals.list);
   const recentRatings = useQuery(api.meals.getRatings, { limit: 10 });
   const upsertMeal = useMutation(api.meals.upsertMeal);
   const addRating = useMutation(api.meals.addRating);
   const deleteRating = useMutation(api.meals.removeRating);
+  const removeMeal = useMutation(api.meals.removeMeal);
 
   const handleSubmit = async () => {
     if (!newMeal.trim()) return;
@@ -49,10 +62,12 @@ export default function MealsPage() {
         Pam: ratings.Pam || undefined,
         Brian: ratings.Brian || undefined,
       },
+      comments: comments.trim() || undefined,
     });
 
     setNewMeal("");
     setRatings({ Roman: null, Harlan: null, Pam: null, Brian: null });
+    setComments("");
   };
 
   const toggleRating = (person: string, rating: "up" | "down") => {
@@ -71,6 +86,25 @@ export default function MealsPage() {
       </Layout>
     );
   }
+
+  // Sort ratings based on sortBy state
+  const sortedRatings = [...recentRatings].sort((a, b) => {
+    const mealA = meals.find((m) => m._id === a.mealId);
+    const mealB = meals.find((m) => m._id === b.mealId);
+
+    switch (sortBy) {
+      case "date-desc":
+        return b.date.localeCompare(a.date);
+      case "date-asc":
+        return a.date.localeCompare(b.date);
+      case "name-asc":
+        return (mealA?.name || "").localeCompare(mealB?.name || "");
+      case "name-desc":
+        return (mealB?.name || "").localeCompare(mealA?.name || "");
+      default:
+        return 0;
+    }
+  });
 
   return (
     <Layout>
@@ -140,6 +174,16 @@ export default function MealsPage() {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Notes / Comments</label>
+              <Input
+                className="h-12 bg-background"
+                placeholder="Any thoughts on the meal?"
+                value={comments}
+                onChange={(e) => setComments(e.target.value)}
+              />
+            </div>
+
             <Button
               size="lg"
               onClick={handleSubmit}
@@ -156,15 +200,29 @@ export default function MealsPage() {
         <div className="space-y-4 pt-8">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-black uppercase tracking-tighter text-muted-foreground/50">Recent History</h2>
-            <div className="h-px flex-1 bg-border mx-4" />
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                  className="text-sm bg-transparent border-none cursor-pointer focus:ring-0 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {SORT_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="h-px w-16 bg-border" />
+            </div>
           </div>
           
-          {recentRatings.length === 0 ? (
+          {sortedRatings.length === 0 ? (
             <div className="text-center py-16 bg-muted/5 border-2 border-dashed rounded-2xl opacity-30">
               <p className="font-medium">No meals recorded yet.</p>
             </div>
           ) : (
-            recentRatings.map((rating) => {
+            sortedRatings.map((rating) => {
               const meal = meals.find((m) => m._id === rating.mealId);
               return (
                 <Card key={rating._id} className="overflow-hidden group hover:border-primary/30 transition-colors shadow-sm">
@@ -183,14 +241,30 @@ export default function MealsPage() {
                         </span>
                       </div>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/10"
-                      onClick={() => deleteRating({ id: rating._id })}
-                    >
-                      <Trash2 className="h-4 w-4 text-destructive/50 hover:text-destructive" />
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/10"
+                        title="Delete this specific rating entry"
+                        onClick={() => deleteRating({ id: rating._id })}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive/50 hover:text-destructive" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/20"
+                        title="Delete entire meal and ALL its history"
+                        onClick={() => {
+                          if (confirm(`Delete entire meal "${meal?.name}" and all its history?`)) {
+                            removeMeal({ id: rating.mealId });
+                          }
+                        }}
+                      >
+                        <Trash className="h-4 w-4 text-destructive/80 hover:text-destructive" />
+                      </Button>
+                    </div>
                   </CardHeader>
                   <CardContent className="py-6">
                     <div className="grid grid-cols-4 gap-4 text-center">
@@ -217,6 +291,14 @@ export default function MealsPage() {
                         </div>
                       ))}
                     </div>
+                    {rating.comments && (
+                      <div className="mt-6 p-3 bg-primary/5 border border-primary/10 rounded-lg flex items-start gap-3">
+                        <MessageSquare className="h-4 w-4 text-primary/60 mt-0.5" />
+                        <p className="text-sm text-foreground/80 italic italic-serif leading-relaxed">
+                          &ldquo;{rating.comments}&rdquo;
+                        </p>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               );
