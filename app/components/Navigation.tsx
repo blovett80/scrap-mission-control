@@ -21,6 +21,7 @@ const navItems = [
   { href: "/memory", label: "Memory", icon: Brain },
   { href: "/team", label: "Team", icon: Users },
   { href: "/office", label: "Office", icon: Building },
+  { href: "/meals", label: "Chef's Table", icon: Utensils },
 ];
 
 export function Navigation() {

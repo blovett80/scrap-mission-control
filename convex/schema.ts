@@ -68,4 +68,22 @@ export default defineSchema({
     y: v.number(),
     updatedAt: v.number(),
   }),
+
+  meals: defineTable({
+    name: v.string(),
+    description: v.optional(v.string()),
+    lastServed: v.number(),
+  }).index("by_name", ["name"]),
+
+  mealRatings: defineTable({
+    mealId: v.id("meals"),
+    date: v.string(),
+    ratings: v.object({
+      Roman: v.optional(v.union(v.literal("up"), v.literal("down"))),
+      Harlan: v.optional(v.union(v.literal("up"), v.literal("down"))),
+      Pam: v.optional(v.union(v.literal("up"), v.literal("down"))),
+      Brian: v.optional(v.union(v.literal("up"), v.literal("down"))),
+    }),
+    comments: v.optional(v.string()),
+  }).index("by_mealId", ["mealId"]),
 });

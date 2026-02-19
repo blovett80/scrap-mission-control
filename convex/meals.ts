@@ -1,0 +1,51 @@
+import { query, mutation } from "./_generated/server";
+import { v } from "convex/values";
+
+export const list = query({
+  handler: async (ctx) => {
+    return await ctx.db.query("meals").order("desc").collect();
+  },
+});
+
+export const getRatings = query({
+  args: { limit: v.number() },
+  handler: async (ctx, args) => {
+    return await ctx.db.query("mealRatings").order("desc").take(args.limit);
+  },
+});
+
+export const upsertMeal = mutation({
+  args: { name: v.string() },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("meals")
+      .withIndex("by_name", (q) => q.eq("name", args.name))
+      .first();
+
+    if (existing) {
+      await ctx.db.patch(existing._id, { lastServed: Date.now() });
+      return existing._id;
+    }
+
+    return await ctx.db.insert("meals", {
+      name: args.name,
+      lastServed: Date.now(),
+    });
+  },
+});
+
+export const addRating = mutation({
+  args: {
+    mealId: v.id("meals"),
+    date: v.string(),
+    ratings: v.object({
+      Roman: v.optional(v.union(v.literal("up"), v.literal("down"))),
+      Harlan: v.optional(v.union(v.literal("up"), v.literal("down"))),
+      Pam: v.optional(v.union(v.literal("up"), v.literal("down"))),
+      Brian: v.optional(v.union(v.literal("up"), v.literal("down"))),
+    }),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.insert("mealRatings", args);
+  },
+});
