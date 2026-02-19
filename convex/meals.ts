@@ -8,9 +8,45 @@ export const list = query({
 });
 
 export const getRatings = query({
-  args: { limit: v.number() },
+  args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
-    return await ctx.db.query("mealRatings").order("desc").take(args.limit);
+    if (args.limit) {
+      return await ctx.db.query("mealRatings").order("desc").take(args.limit);
+    }
+    return await ctx.db.query("mealRatings").order("desc").collect();
+  },
+});
+
+export const getTopMeals = query({
+  handler: async (ctx) => {
+    const meals = await ctx.db.query("meals").collect();
+    const ratings = await ctx.db.query("mealRatings").collect();
+
+    const mealStats = meals.map((meal) => {
+      const mealRatings = ratings.filter((r) => r.mealId === meal._id);
+      let upVotes = 0;
+      let totalVotes = 0;
+
+      mealRatings.forEach((r) => {
+        Object.values(r.ratings).forEach((v) => {
+          if (v) {
+            totalVotes++;
+            if (v === "up") upVotes++;
+          }
+        });
+      });
+
+      return {
+        ...meal,
+        approvalRating: totalVotes > 0 ? (upVotes / totalVotes) * 100 : 0,
+        totalVotes,
+      };
+    });
+
+    return mealStats
+      .filter((m) => m.totalVotes > 0)
+      .sort((a, b) => b.approvalRating - a.approvalRating || b.totalVotes - a.totalVotes)
+      .slice(0, 5);
   },
 });
 
