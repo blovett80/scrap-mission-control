@@ -72,9 +72,9 @@ export default function Dashboard() {
       value: "🍺",
       subtext: "Scrap active",
       icon: Building,
-      color: "text-white",
+      color: "text-foreground", // Changed from text-white
       href: "/office",
-      bgColor: "bg-white/10"
+      bgColor: "bg-foreground/10" // Changed from bg-white/10
     }
   ];
 
@@ -82,9 +82,9 @@ export default function Dashboard() {
     <Layout>
       <div className="space-y-8 max-w-7xl mx-auto">
         <div className="flex flex-col gap-2">
-          <h1 className="text-4xl font-extrabold tracking-tight text-white flex items-center gap-3">
+          <h1 className="text-4xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
             Mission Control
-            <span className="text-sm font-medium px-3 py-1 rounded-full bg-white/10 text-white/60 tracking-normal">
+            <span className="text-sm font-medium px-3 py-1 rounded-full bg-foreground/10 text-foreground/60 tracking-normal">
               v2.0
             </span>
           </h1>
@@ -99,7 +99,7 @@ export default function Dashboard() {
                 <Card className="h-full border-0 bg-white/[0.03] hover:bg-white/[0.06] transition-all duration-300 hover:translate-y-[-2px] overflow-hidden relative">
                   <div className={cn("absolute top-0 left-0 w-1 h-full", stat.color.replace("text-", "bg-"))} />
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-white transition-colors">
+                    <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
                       {stat.label}
                     </CardTitle>
                     <div className={cn("p-2 rounded-lg transition-colors", stat.bgColor)}>
@@ -107,7 +107,7 @@ export default function Dashboard() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-4xl font-bold text-white tracking-tight mb-1">{stat.value}</div>
+                    <div className="text-4xl font-bold text-foreground tracking-tight mb-1">{stat.value}</div>
                     <div className="flex items-center justify-between">
                       <p className="text-xs text-muted-foreground font-medium">
                         {stat.subtext}
@@ -123,7 +123,7 @@ export default function Dashboard() {
 
         {tasks && tasks.filter(t => t.status === "in_progress").length > 0 && (
           <div className="space-y-4">
-            <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+            <h2 className="text-xl font-bold text-foreground tracking-tight flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-[oklch(0.65_0.25_260)] animate-pulse" />
               Active Work
             </h2>
@@ -137,7 +137,7 @@ export default function Dashboard() {
                     <CheckSquare className="h-5 w-5 text-[oklch(0.65_0.25_260)]" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-sm font-medium text-white truncate group-hover:text-[oklch(0.65_0.25_260)] transition-colors">
+                    <h3 className="text-sm font-medium text-foreground truncate group-hover:text-[oklch(0.65_0.25_260)] transition-colors">
                       {task.title}
                     </h3>
                     <div className="flex items-center gap-2 mt-1">

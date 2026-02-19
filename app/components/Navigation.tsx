@@ -29,7 +29,7 @@ export function Navigation() {
   const pathname = usePathname();
 
   return (
-    <nav className="w-64 border-r border-white/[0.06] bg-[oklch(0.07_0_0)] min-h-screen p-5 flex flex-col">
+    <nav className="w-64 border-r border-white/[0.06] bg-[var(--sidebar)] min-h-screen p-5 flex flex-col">
       {/* Logo / Brand */}
       <div className="mb-10 px-3">
         <div className="flex items-center gap-3">
@@ -37,15 +37,15 @@ export function Navigation() {
             🍺
           </div>
           <div>
-            <h1 className="text-sm font-bold tracking-tight text-white">Mission Control</h1>
-            <p className="text-[10px] font-medium text-white/30 uppercase tracking-widest">Scrap</p>
+            <h1 className="text-sm font-bold tracking-tight text-foreground">Mission Control</h1>
+            <p className="text-[10px] font-medium text-foreground/30 uppercase tracking-widest">Scrap</p>
           </div>
         </div>
       </div>
       
       {/* Nav Items */}
       <div className="space-y-1 flex-1">
-        <p className="px-3 mb-3 text-[10px] font-bold uppercase tracking-[0.15em] text-white/20">Navigation</p>
+        <p className="px-3 mb-3 text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/20">Navigation</p>
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -57,14 +57,14 @@ export function Navigation() {
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200",
                 isActive
-                  ? "bg-white/10 text-white shadow-sm"
-                  : "text-white/40 hover:bg-white/[0.05] hover:text-white/70"
+                  ? "bg-foreground/10 text-foreground shadow-sm"
+                  : "text-foreground/40 hover:bg-foreground/[0.05] hover:text-foreground/70"
               )}
             >
-              <Icon className={cn("h-4 w-4 transition-colors duration-200", isActive ? "text-white" : "text-white/30")} />
+              <Icon className={cn("h-4 w-4 transition-colors duration-200", isActive ? "text-foreground" : "text-foreground/30")} />
               {item.label}
               {isActive && (
-                <div className="ml-auto h-1.5 w-1.5 rounded-full bg-white/60" />
+                <div className="ml-auto h-1.5 w-1.5 rounded-full bg-foreground/60" />
               )}
             </Link>
           );
@@ -78,8 +78,8 @@ export function Navigation() {
             <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
           </div>
           <div>
-            <p className="text-xs font-medium text-white/70">Agent Online</p>
-            <p className="text-[10px] text-white/30">Scrap • Ready</p>
+            <p className="text-xs font-medium text-foreground/70">Agent Online</p>
+            <p className="text-[10px] text-foreground/30">Scrap • Ready</p>
           </div>
         </div>
       </div>

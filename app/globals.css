@@ -2,8 +2,6 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -50,34 +48,34 @@
 :root {
   --radius: 0.75rem;
   
-  /* Modern Dark Mode by Default Colors (Zinc/Slate inspired) */
-  --background: oklch(0.09 0 0); /* Very dark gray, almost black */
-  --foreground: oklch(0.98 0 0); /* White */
+  /* Default light mode colors */
+  --background: oklch(0.98 0 0); /* White */
+  --foreground: oklch(0.09 0 0); /* Black */
   
-  --card: oklch(0.12 0 0); /* Slightly lighter than bg */
-  --card-foreground: oklch(0.98 0 0);
+  --card: oklch(0.95 0.01 230); /* Light gray card */
+  --card-foreground: oklch(0.09 0 0);
   
-  --popover: oklch(0.12 0 0);
-  --popover-foreground: oklch(0.98 0 0);
+  --popover: oklch(0.95 0.01 230);
+  --popover-foreground: oklch(0.09 0 0);
   
-  --primary: oklch(0.98 0 0); /* White primary */
-  --primary-foreground: oklch(0.09 0 0); /* Black text on white */
+  --primary: oklch(0.4 0.15 250); /* Light blue primary */
+  --primary-foreground: oklch(0.98 0 0); /* White text on primary */
   
-  --secondary: oklch(0.2 0 0); /* Dark gray secondary */
-  --secondary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.9 0.02 170); /* Light gray secondary */
+  --secondary-foreground: oklch(0.09 0 0);
   
-  --muted: oklch(0.18 0 0);
-  --muted-foreground: oklch(0.65 0 0);
+  --muted: oklch(0.92 0.01 170);
+  --muted-foreground: oklch(0.45 0 0); /* Dark gray muted text */
   
-  --accent: oklch(0.18 0 0);
-  --accent-foreground: oklch(0.98 0 0);
+  --accent: oklch(0.9 0.03 250); /* Light purple accent */
+  --accent-foreground: oklch(0.09 0 0);
   
-  --destructive: oklch(0.6 0.15 25);
+  --destructive: oklch(0.6 0.15 25); /* Red destructive */
   --destructive-foreground: oklch(0.98 0 0);
   
-  --border: oklch(0.2 0 0);
-  --input: oklch(0.2 0 0);
-  --ring: oklch(0.8 0 0);
+  --border: oklch(0.85 0.01 170); /* Light gray border */
+  --input: oklch(0.95 0.01 230); /* Light gray input background */
+  --ring: oklch(0.4 0.15 250 / 0.8); /* Primary color with alpha for ring */
   
   /* Charts - Vibrant but pro */
   --chart-1: oklch(0.65 0.25 260); /* Electric Blue */
@@ -87,20 +85,14 @@
   --chart-5: oklch(0.7 0.2 20);   /* Coral */
   
   /* Sidebar uses same scheme */
-  --sidebar: oklch(0.09 0 0);
-  --sidebar-foreground: oklch(0.98 0 0);
-  --sidebar-primary: oklch(0.98 0 0);
-  --sidebar-primary-foreground: oklch(0.09 0 0);
-  --sidebar-accent: oklch(0.15 0 0);
-  --sidebar-accent-foreground: oklch(0.98 0 0);
-  --sidebar-border: oklch(0.2 0 0);
-  --sidebar-ring: oklch(0.8 0 0);
-}
-
-/* Force dark mode everywhere for that "Mission Control" vibe */
-.dark, body {
-  /* Using values from :root above, ensuring consistency */
-  color-scheme: dark;
+  --sidebar: oklch(0.95 0.01 230);
+  --sidebar-foreground: oklch(0.09 0 0);
+  --sidebar-primary: oklch(0.4 0.15 250);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.9 0.03 250);
+  --sidebar-accent-foreground: oklch(0.09 0 0);
+  --sidebar-border: oklch(0.85 0.01 170);
+  --sidebar-ring: oklch(0.4 0.15 250 / 0.8);
 }
 
 @layer base {
@@ -108,8 +100,22 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground antialiased selection:bg-white/20;
+    @apply bg-background text-foreground antialiased selection:bg-white/20; /* Kept selection white/20 */
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-foreground; /* Ensure headings use the primary text color */
+  }
+
+  /* Targeting card elements for text readability */
+  .card, .glass-card {
+    @apply text-foreground; /* Ensure text within cards uses the primary text color */
+  }
+
+  /* Explicitly set color for common text elements */
+  p, li, span, a, label, input, textarea, select, button, strong, em {
+    @apply text-foreground;
   }
   
   /* Smooth scrolling */
