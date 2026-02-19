@@ -1,5 +1,17 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Environment Setup
+
+Copy `.env.example` to `.env.local` and configure:
+
+```bash
+cp .env.example .env.local
+```
+
+Required variables:
+- `API_KEY` - API key for OpenClaw integration
+- `MIND_DIR` - Path to your mind/ directory (for memory viewer)
+
 ## Getting Started
 
 First, run the development server:

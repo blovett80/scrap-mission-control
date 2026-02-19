@@ -3,7 +3,7 @@ import { readdir, readFile, writeFile } from "fs/promises";
 import { join } from "path";
 import matter from "gray-matter";
 
-const MIND_DIR = "/Users/cassandralovett/.openclaw/workspace/mind";
+const MIND_DIR = process.env.MIND_DIR || "/Users/cassandralovett/.openclaw/workspace/mind";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
