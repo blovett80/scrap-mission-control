@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 
 const FAMILY = ["Roman", "Harlan", "Pam", "Brian"] as const;
-const CHEFS = ["Robert", "Brian", "Pam", "Other"] as const;
+const CHEFS = ["Robert", "Brian", "Pam", "Roman", "Harlan", "Other"] as const;
 
 const SORT_OPTIONS = [
   { value: "date-desc", label: "Most Recent First" },
