@@ -57,3 +57,10 @@ export const addRating = mutation({
     return await ctx.db.insert("mealRatings", args);
   },
 });
+
+export const removeRating = mutation({
+  args: { id: v.id("mealRatings") },
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.id);
+  },
+});
