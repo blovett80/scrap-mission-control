@@ -15,7 +15,10 @@ export const getRatings = query({
 });
 
 export const upsertMeal = mutation({
-  args: { name: v.string() },
+  args: { 
+    name: v.string(),
+    chef: v.optional(v.string()),
+  },
   handler: async (ctx, args) => {
     const existing = await ctx.db
       .query("meals")
@@ -23,12 +26,16 @@ export const upsertMeal = mutation({
       .first();
 
     if (existing) {
-      await ctx.db.patch(existing._id, { lastServed: Date.now() });
+      await ctx.db.patch(existing._id, { 
+        lastServed: Date.now(),
+        chef: args.chef,
+      });
       return existing._id;
     }
 
     return await ctx.db.insert("meals", {
       name: args.name,
+      chef: args.chef,
       lastServed: Date.now(),
     });
   },
@@ -38,6 +45,7 @@ export const addRating = mutation({
   args: {
     mealId: v.id("meals"),
     date: v.string(),
+    chef: v.optional(v.string()),
     ratings: v.object({
       Roman: v.optional(v.union(v.literal("up"), v.literal("down"))),
       Harlan: v.optional(v.union(v.literal("up"), v.literal("down"))),
