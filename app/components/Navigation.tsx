@@ -9,7 +9,8 @@ import {
   Calendar, 
   Brain, 
   Users, 
-  Building 
+  Building,
+  Utensils 
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 

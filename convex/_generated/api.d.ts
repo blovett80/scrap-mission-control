@@ -10,6 +10,7 @@
 
 import type * as calendar from "../calendar.js";
 import type * as content from "../content.js";
+import type * as meals from "../meals.js";
 import type * as memories from "../memories.js";
 import type * as tasks from "../tasks.js";
 
@@ -22,6 +23,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   calendar: typeof calendar;
   content: typeof content;
+  meals: typeof meals;
   memories: typeof memories;
   tasks: typeof tasks;
 }>;
