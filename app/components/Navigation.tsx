@@ -29,16 +29,23 @@ export function Navigation() {
   const pathname = usePathname();
 
   return (
-    <nav className="w-64 border-r bg-card min-h-screen p-4">
-      <div className="mb-8">
-        <h1 className="text-xl font-bold flex items-center gap-2">
-          <span className="text-2xl">🍺</span>
-          Mission Control
-        </h1>
-        <p className="text-xs text-muted-foreground mt-1">Scrap&apos;s Dashboard</p>
+    <nav className="w-64 border-r border-white/[0.06] bg-[oklch(0.07_0_0)] min-h-screen p-5 flex flex-col">
+      {/* Logo / Brand */}
+      <div className="mb-10 px-3">
+        <div className="flex items-center gap-3">
+          <div className="h-9 w-9 rounded-lg bg-white/10 flex items-center justify-center text-lg">
+            🍺
+          </div>
+          <div>
+            <h1 className="text-sm font-bold tracking-tight text-white">Mission Control</h1>
+            <p className="text-[10px] font-medium text-white/30 uppercase tracking-widest">Scrap</p>
+          </div>
+        </div>
       </div>
       
-      <div className="space-y-1">
+      {/* Nav Items */}
+      <div className="space-y-1 flex-1">
+        <p className="px-3 mb-3 text-[10px] font-bold uppercase tracking-[0.15em] text-white/20">Navigation</p>
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -48,17 +55,33 @@ export function Navigation() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-200",
                 isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  ? "bg-white/10 text-white shadow-sm"
+                  : "text-white/40 hover:bg-white/[0.05] hover:text-white/70"
               )}
             >
-              <Icon className="h-4 w-4" />
+              <Icon className={cn("h-4 w-4 transition-colors duration-200", isActive ? "text-white" : "text-white/30")} />
               {item.label}
+              {isActive && (
+                <div className="ml-auto h-1.5 w-1.5 rounded-full bg-white/60" />
+              )}
             </Link>
           );
         })}
+      </div>
+
+      {/* Footer */}
+      <div className="px-3 py-4 border-t border-white/[0.06]">
+        <div className="flex items-center gap-3">
+          <div className="h-8 w-8 rounded-full bg-green-500/20 flex items-center justify-center">
+            <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+          </div>
+          <div>
+            <p className="text-xs font-medium text-white/70">Agent Online</p>
+            <p className="text-[10px] text-white/30">Scrap • Ready</p>
+          </div>
+        </div>
       </div>
     </nav>
   );
